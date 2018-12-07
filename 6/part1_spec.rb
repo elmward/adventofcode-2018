@@ -40,14 +40,6 @@ RSpec.describe("Advent of Code 2018 Day 6 Part 1") do
     it "returns the indexes of coordinates that are at the edges" do
       expect(infinites(coords)).to match_array([0, 1, 2, 5])
     end
-
-    context "with two coords on the same edge" do
-      let(:coords) { [[1, 1], [1,3], [1, 6], [8, 3], [3, 4], [5, 5], [8, 9]] }
-
-      it "can return more than four infinites" do
-        expect(infinites(coords)).to match_array([0, 1, 2, 3, 6])
-      end
-    end
   end
 
   describe('#largest_area') do

@@ -24,9 +24,11 @@ def infinites(coordinates)
   bottom = bottom(coordinates)
   top = top(coordinates)
 
+  centerpoint = [(rightmost - leftmost)/2, (top - bottom)/2]
+  max_distance = distance([centerpoint[0], 0], centerpoint)
+
   coordinates.each.with_index.select do |coordinate, i|
-    [leftmost(coordinates), rightmost(coordinates)].include?(coordinate[0]) ||
-      [top(coordinates), bottom(coordinates)].include?(coordinate[1])
+    distance(centerpoint, coordinate) >= max_distance
   end.map { |coord_and_index| coord_and_index[1] }
 end
 
@@ -42,9 +44,6 @@ def largest_area(coordinates)
   (bottom..top).map do |y|
     (leftmost..rightmost).map do |x|
       distances = coordinates.map { |coord| distance(coord, [x,y]) }
-      # if distances.sort.chunk { |x| x }.to_a[0][1].count > 1
-        # if we're closest to two or more coords
-        # puts "skipping #{[x,y]}"
       if distances.sort[0] == distances.sort[1]
         next
       end
@@ -52,20 +51,12 @@ def largest_area(coordinates)
       closest_coordinate = coordinates.each.with_index.min_by do |coordinate, i|
         distance(coordinate, [x,y])
       end[1]
-
-      # puts "#{[x,y]} is closest to #{coordinates[closest_coordinate]}"
-      # print "#{closest_coordinate}"
       areas[closest_coordinate] += 1
     end
   end
 
-  # since we've pinned the entire coordinate system to the outermost coordinates,
-  # it's extremely unlikely one of the infinites is the largest. The below two lines
-  # will eliminate them just in case.
-  # areas.each.with_index.map { |area, i| puts "#{i}: #{coordinates[i]}, #{area}" }
   areas.each.with_index.map { |area, i| areas[i] = 0 if infinites.include?(i) }
   areas.reject { |area| area == 0 }.max
-  # FIXME: somehow my max area in here is way too high and the second-highest area is the correct one. :|
 end
 
 def main
