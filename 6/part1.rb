@@ -25,7 +25,7 @@ def infinites(coordinates)
   top = top(coordinates)
 
   centerpoint = [(rightmost - leftmost)/2, (top - bottom)/2]
-  max_distance = distance([centerpoint[0], 0], centerpoint)
+  max_distance = centerpoint.max
 
   coordinates.each.with_index.select do |coordinate, i|
     distance(centerpoint, coordinate) >= max_distance
