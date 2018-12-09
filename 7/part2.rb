@@ -26,23 +26,23 @@ def time_in_parallel(steps, workers)
   t = 0
 
   loop do
-    break if steps.all? { |step| step.complete? }
+    break if steps.all?(&:complete?)
     step = steps_in_progress.sort_by { |step| step.duration - step.time_worked }.first
     time_passed = step.duration - step.time_worked
     t += time_passed
     steps_in_progress.map { |step| step.time_worked += time_passed }
 
-    completed_steps = steps_in_progress.select { |step| step.complete? }
+    completed_steps = steps_in_progress.select(&:complete?)
     completed_steps.each do |step|
       newly_available = step.children.select do |child|
-        child.parents.all? { |parent| parent.complete? }
+        child.parents.all?(&:complete?)
       end
 
       available << newly_available
       available = available.flatten.sort
     end
 
-    steps_in_progress = steps_in_progress.reject { |step| step.complete? }
+    steps_in_progress = steps_in_progress.reject(&:complete?)
     steps_in_progress << available.shift(workers - steps_in_progress.length)
     steps_in_progress = steps_in_progress.flatten
   end
