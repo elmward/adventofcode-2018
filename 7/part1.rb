@@ -76,6 +76,7 @@ def parse(input_string, steps)
   matches = input_regex.match(input_string)
   first_name = matches[1]
   second_name = matches[2]
+  # really looking like I should have just used a hash here
   first_step = steps.detect { |step| step.name == first_name } || Step.new(matches[1])
   second_step = steps.detect { |step| step.name == second_name } || Step.new(matches[2])
   first_step.add_children(second_step)
